@@ -46,7 +46,7 @@ trait MainRoute extends Directives with AppLogging {
     get {
       //static("css", "../../scala-2.11/resource_managed/main/css") ~
       //static("pub", "../../../web") ~
-      //static("js", "../../scala-2.11") ~
+      static("exchange", FlexServer.exchangeDir.getCanonicalPath()) ~
       path_("") {
         complete {
           s"Flex-server ${buildinfo.buildInfo.name} ${buildinfo.buildInfo.version}"
