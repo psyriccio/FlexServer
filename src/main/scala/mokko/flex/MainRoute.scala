@@ -17,7 +17,7 @@ import spray.routing.Route
 
 trait MainRoute extends Directives with AppLogging {
 
-  val MainRoute: Route = {
+  val mainRoute: Route = {
     
     def path_(value: String) = {
       (pathPrefix(value) & pathEndOrSingleSlash)
