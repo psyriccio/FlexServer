@@ -23,7 +23,7 @@ trait MainRoute extends Directives with AppLogging {
       (pathPrefix(value) & pathEndOrSingleSlash)
     }
     
-   def static(urlPath: String, fromPath: String) = {
+    def static(urlPath: String, fromPath: String) = {
       path(urlPath / Rest) { pathRest =>
         log.info(s"GET ${urlPath}/${pathRest}")
         def result(mediaType: MediaType) = {
@@ -43,15 +43,20 @@ trait MainRoute extends Directives with AppLogging {
         }
       }
     }
-    get {
-      //static("css", "../../scala-2.11/resource_managed/main/css") ~
-      //static("pub", "../../../web") ~
-      static("exchange", FlexServer.exchangeDir.getCanonicalPath()) ~
-      path_("") {
+    //static("css", "../../scala-2.11/resource_managed/main/css") ~
+    //static("pub", "../../../web") ~
+    static("exchange", FlexServer.exchangeDir.getCanonicalPath()) ~
+    path_("") {
+      get {
         complete {
           s"Flex-server ${buildinfo.buildInfo.name} ${buildinfo.buildInfo.version}"
         }
+      } ~
+      post {
+        complete {
+          "OK"
+        }
       }
-    }    
+    }
   }
 }
