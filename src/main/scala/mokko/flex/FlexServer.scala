@@ -15,8 +15,6 @@ import spray.can.Http
 
 object FlexServer extends App {
   
-  val log = akkaSystem.log
-
   val conf = ConfigFactory.load(
     ConfigFactory.parseFile(
       new File("flexsrv.conf")
@@ -24,6 +22,7 @@ object FlexServer extends App {
   )
 
   val akkaSystem = ActorSystem("flex-server", conf)
+  val log = akkaSystem.log
 
   val host = if(args.length < 1) conf.getString("flex-server.host") else args(0)
   val port = if(args.length < 2) conf.getInt("flex-server.port") else args(1).toInt
