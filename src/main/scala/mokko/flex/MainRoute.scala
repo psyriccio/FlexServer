@@ -49,7 +49,7 @@ trait MainRoute extends Directives with AppLogging {
     path_("") {
       get {
         complete {
-          s"Flex-server ${buildinfo.buildInfo.name} ${buildinfo.buildInfo.version}"
+          s"${buildinfo.buildInfo.name} ${buildinfo.buildInfo.version}"
         }
       } ~
       post {
