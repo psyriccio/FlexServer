@@ -7,14 +7,14 @@
 package mokko.flex
 
 import com.google.common.io.Files
+import java.io.ByteArrayInputStream
 import java.io.File
-import spray.http.HttpData
-import spray.http.HttpEntity
-import spray.http.MediaType
+import spray.http._
+import java.io.InputStream
+import java.io.OutputStream
+import java.nio.charset.Charset
 import spray.http.MediaTypes._
-import spray.http.MultipartFormData
-import spray.routing.Directives
-import spray.routing.Route
+import spray.routing._
 
 trait MainRoute extends Directives with AppLogging {
 
@@ -49,17 +49,62 @@ trait MainRoute extends Directives with AppLogging {
     static("exchange", FlexServer.exchangeDir.getCanonicalPath()) ~
     path_("") {
       get {
+        log.info(s"GET ${requestUri.toString}")
         complete {
           s"${buildinfo.buildInfo.name} ${buildinfo.buildInfo.version}"
         }
       } ~
       post {
+        log.info(s"POST ${requestUri.toString}")
         entity(as[MultipartFormData]) { formData =>
+          log.info(s"formData = ${formData.fields.mkString}")
           complete {
-            formData.fields.mkString
+            val details = formData.fields.map {
+              case (BodyPart(entity, headers)) =>
+                log.info(s"data.length = ${entity.data.length}")
+                val content = new ByteArrayInputStream(entity.data.toByteArray)
+                log.info(s"length = ${content.available}")
+                //val contentType = headers.find(h => h.is("content-type")).get.value
+                //log.info(s"content-type = ${contentType}")
+                val fileName = headers.find(h => h.is("content-disposition")).get.value.split("filename=").last
+                log.info(s"fileName = ${fileName}")
+                val result = saveAttachment(s"${FlexServer.exchangeDir.getCanonicalPath()}/${fileName}", content)
+                //(contentType, fileName, result)
+              case _ =>
+            }
+            s"""{"status": "Processed POST request, details=$details" }"""
           }
         }
       }
     }
   }
+  private def saveAttachment(fileName: String, content: Array[Byte]): Boolean = {
+    saveAttachment[Array[Byte]](fileName, content, {(is, os) => os.write(is)})
+    true
+  }
+
+  private def saveAttachment(fileName: String, content: InputStream): Boolean = {
+    saveAttachment[InputStream](fileName, content,
+    { (is, os) =>
+      val buffer = new Array[Byte](16384)
+      Iterator
+        .continually (is.read(buffer))
+        .takeWhile (-1 !=)
+        .foreach (read=>os.write(buffer,0,read))
+    }
+    )
+  }
+
+  private def saveAttachment[T](fileName: String, content: T, writeFile: (T, OutputStream) => Unit): Boolean = {
+    try {
+      val fos = new java.io.FileOutputStream(fileName)
+      writeFile(content, fos)
+      fos.close()
+      true
+    } catch {
+      case _:Throwable => false
+    }
+  }
+  
+
 }
