@@ -12,6 +12,7 @@ import spray.http.HttpData
 import spray.http.HttpEntity
 import spray.http.MediaType
 import spray.http.MediaTypes._
+import spray.http.MultipartFormData
 import spray.routing.Directives
 import spray.routing.Route
 
@@ -53,8 +54,10 @@ trait MainRoute extends Directives with AppLogging {
         }
       } ~
       post {
-        complete {
-          "OK"
+        entity(as[MultipartFormData]) { formData =>
+          complete {
+            formData.fields.mkString
+          }
         }
       }
     }
