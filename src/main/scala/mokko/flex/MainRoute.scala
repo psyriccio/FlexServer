@@ -119,7 +119,7 @@ trait MainRoute extends Directives with AppLogging {
       fos.close()
       true
     } catch {
-      case _:Throwable => false
+      case _: Throwable => false
     }
   }
   
