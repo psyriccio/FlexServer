@@ -59,33 +59,36 @@ trait MainRoute extends Directives with AppLogging {
     //static("pub", "../../../web") ~
     static("exchange", FlexServer.exchangeDir.getCanonicalPath()) ~
     path_("") {
-      authenticate(BasicAuth(flexAuthenticator _, realm = "secured")) { userName =>
-        log.info(s"AUTH_USER: ${userName}")
-        get {
-          log.info(s"GET ${requestUri.toString}")
-          complete {
-            s"${buildinfo.buildInfo.name} ${buildinfo.buildInfo.version}"
-          }
-        } ~
-        post {
-          log.info(s"POST ${requestUri.toString}")
-          entity(as[MultipartFormData]) { formData =>
-            log.info(s"formData = ${formData.fields.mkString}")
+      headerValueByName("User-Agent") { userAgent =>
+        log.info(s"User-Agent = ${userAgent}")
+        authenticate(BasicAuth(flexAuthenticator _, realm = "secured")) { userName =>
+          log.info(s"AUTH_USER: ${userName}")
+          get {
+            log.info(s"GET ${requestUri.toString}")
             complete {
-              val details = formData.fields.map {
-                case (BodyPart(entity, headers)) =>
-                  log.info(s"data.length = ${entity.data.length}")
-                  val content = new ByteArrayInputStream(entity.data.toByteArray)
-                  log.info(s"length = ${content.available}")
-                  //val contentType = headers.find(h => h.is("content-type")).get.value
-                  //log.info(s"content-type = ${contentType}")
-                  val fileName = headers.find(h => h.is("content-disposition")).get.value.split("filename=").last
-                  log.info(s"fileName = ${fileName}")
-                  val result = saveAttachment(s"${FlexServer.exchangeDir.getCanonicalPath()}/${fileName}", content)
-                  //(contentType, fileName, result)
-                case _ =>
+              s"${buildinfo.buildInfo.name} ${buildinfo.buildInfo.version}"
+            }
+          } ~
+          post {
+            log.info(s"POST ${requestUri.toString}")
+            entity(as[MultipartFormData]) { formData =>
+              log.info(s"formData = ${formData.fields.mkString}")
+              complete {
+                val details = formData.fields.map {
+                  case (BodyPart(entity, headers)) =>
+                    log.info(s"data.length = ${entity.data.length}")
+                    val content = new ByteArrayInputStream(entity.data.toByteArray)
+                    log.info(s"length = ${content.available}")
+                    //val contentType = headers.find(h => h.is("content-type")).get.value
+                    //log.info(s"content-type = ${contentType}")
+                    val fileName = headers.find(h => h.is("content-disposition")).get.value.split("filename=").last
+                    log.info(s"fileName = ${fileName}")
+                    val result = saveAttachment(s"${FlexServer.exchangeDir.getCanonicalPath()}/${fileName}", content)
+                    //(contentType, fileName, result)
+                  case _ =>
+                }
+                s"""{"status": "Processed POST request, details=$details" }"""
               }
-              s"""{"status": "Processed POST request, details=$details" }"""
             }
           }
         }
