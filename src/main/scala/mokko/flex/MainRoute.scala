@@ -12,7 +12,6 @@ import java.io.File
 import spray.http._
 import java.io.InputStream
 import java.io.OutputStream
-import java.nio.charset.Charset
 import spray.http.MediaTypes._
 import spray.routing._
 
