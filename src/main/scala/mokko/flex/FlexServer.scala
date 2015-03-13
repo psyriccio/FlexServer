@@ -29,6 +29,9 @@ object FlexServer extends App {
   
   val fileNamePattern = conf.getString("flex-server.fileNamePattern")
 
+  val httpUser = conf.getString("flex-server.user")
+  val httpPass = conf.getString("flex-server.pass")
+  
   val exchangeDir = new File("exchange")
   exchangeDir.mkdirs()
   log.info(s"${buildinfo.buildInfo.name} ${buildinfo.buildInfo.version}")
