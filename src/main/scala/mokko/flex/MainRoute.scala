@@ -72,7 +72,7 @@ trait MainRoute extends Directives with AppLogging {
         log.info(s"GET ${urlPath}")
         respondWithMediaType(`text/plain`) {
           complete {
-            text
+            HttpEntity(HttpData(text))
           }
         }
       }
