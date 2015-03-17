@@ -61,7 +61,12 @@ trait MainRoute extends Directives with AppLogging {
         log.info(s"GET ${urlPath}")
         respondWithMediaType(mediaType) {
           complete {
-            HttpEntity(HttpData(Files.toByteArray(new File(new File(fileDir), fileName))))
+            val file = new File(new File(fileDir), fileName)
+            if(file.exists) {
+              HttpEntity(HttpData(Files.toByteArray(file)))
+            } else {
+              StatusCodes.NotFound
+            }
           }
         }
       }
