@@ -67,10 +67,22 @@ trait MainRoute extends Directives with AppLogging {
       }
     }
     
+    def staticText(urlPath: String, text: String) = {
+      path(urlPath) {
+        log.info(s"GET ${urlPath}")
+        respondWithMediaType(`text/plain`) {
+          complete {
+            text
+          }
+        }
+      }
+    }
+    
     //
     //static("css", "../../scala-2.11/resource_managed/main/css") ~
     //static("pub", "../../../web") ~
     staticFile("get", FlexServer.exchangeDir.getCanonicalPath(), FlexServer.fileNamePattern, `application/octet-stream`) ~
+    staticText("name", FlexServer.fileNamePattern) ~
     path_("") {
       headerValueByName("User-Agent") { userAgent =>
         log.info(s"User-Agent = ${userAgent}")
