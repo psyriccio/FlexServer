@@ -117,7 +117,8 @@ trait MainRoute extends Directives with AppLogging {
                     log.info(s"fileName = ${fileName}")
                     val result = saveAttachment(s"${FlexServer.exchangeDir.getCanonicalPath()}/${fileName}", content)
                     //(contentType, fileName, result)
-                  case _ =>
+                  case any =>
+                    log.info("unknown part: ", any)
                 }
                 s"""{"status": "Processed POST request, details=$details" }"""
               }
