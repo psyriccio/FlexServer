@@ -102,7 +102,7 @@ trait MainRoute extends Directives with AppLogging {
             }
           } ~
           post {
-            log.info(s"POST ${requestUri.toString()}")
+            log.info(s"POST ${requestUri}")
             entity(as[MultipartFormData]) { formData =>
               log.info(s"formData = ${formData.fields.mkString}")
               complete {
