@@ -62,7 +62,7 @@ trait MainRoute extends Directives with AppLogging {
         respondWithMediaType(mediaType) {
           complete {
             val file = new File(new File(fileDir), fileName)
-            if(file.exists) {
+            if(file.exists()) {
               HttpEntity(HttpData(Files.toByteArray(file)))
             } else {
               StatusCodes.NotFound
