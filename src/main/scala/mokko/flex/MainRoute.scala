@@ -141,13 +141,15 @@ trait MainRoute extends Directives with AppLogging {
       Iterator
         .continually (is.read(buffer))
         .takeWhile (-1 !=)
-        .foreach (read=>os.write(buffer,0,read))
+        .foreach (read=>os.write(buffer, 0, read))
     }
     )
   }
 
   private def saveAttachment[T](fileName: String, content: T, writeFile: (T, OutputStream) => Unit): Boolean = {
     try {
+      val fl = new File(fileName)
+      if(fl.exists()) fl.delete()
       val fos = new java.io.FileOutputStream(fileName)
       writeFile(content, fos)
       fos.close()
