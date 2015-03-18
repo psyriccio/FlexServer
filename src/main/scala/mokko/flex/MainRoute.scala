@@ -102,7 +102,7 @@ trait MainRoute extends Directives with AppLogging {
             }
           } ~
           post {
-            log.info(s"POST ${requestUri}")
+            log.info(s"POST ${requestUri.toString()}")
             entity(as[MultipartFormData]) { formData =>
               log.info(s"formData = ${formData.fields.mkString}")
               complete {
@@ -113,7 +113,8 @@ trait MainRoute extends Directives with AppLogging {
                     log.info(s"length = ${content.available}")
                     //val contentType = headers.find(h => h.is("content-type")).get.value
                     //log.info(s"content-type = ${contentType}")
-                    val fileName = headers.find(h => h.is("content-disposition")).get.value.split("filename=").last
+                    //val fileName = headers.find(h => h.is("content-disposition")).get.value.split("filename=").last
+                    val fileName = headers.find(h => h.is("file-name")).get.value
                     log.info(s"fileName = ${fileName}")
                     val result = saveAttachment(s"${FlexServer.exchangeDir.getCanonicalPath()}/${fileName}", content)
                     //(contentType, fileName, result)
