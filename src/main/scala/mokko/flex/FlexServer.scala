@@ -8,12 +8,18 @@ package mokko.flex
 
 import akka.actor.ActorSystem
 import akka.io.IO
+import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.core.util.StatusPrinter
 import com.typesafe.config.ConfigFactory
 import java.io.File
+import org.slf4j.LoggerFactory
 import scala.io.StdIn
 import spray.can.Http
 
 object FlexServer extends App {
+
+  val lc = LoggerFactory.getILoggerFactory().asInstanceOf[LoggerContext];
+  StatusPrinter.print(lc);
   
   val conf = ConfigFactory.load(
     ConfigFactory.parseFile(
