@@ -74,3 +74,5 @@ reflect	<<= (sbt.Keys.sourceManaged, sbt.Keys.name, sbt.Keys.version, reflectPac
 }
 
 sourceGenerators in Compile <+= reflect map identity
+
+unmanagedClasspath in Runtime <+= (baseDirectory) map { bd => Attributed.blank(bd / "res") }
