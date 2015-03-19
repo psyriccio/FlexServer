@@ -18,9 +18,13 @@ object Sha256 {
 }
 
 object Sha128 {
-  private val sha = MessageDigest.getInstance("SHA-128")
+  private val sha = MessageDigest.getInstance("SHA-256")
   def digest(s: String): Array[Byte] = {
-    sha.digest(s.getBytes)
+    val ar = sha.digest(s.getBytes)
+    Array[Byte](ar(0), ar(2), ar(4), ar(6), 
+                ar(8), ar(10), ar(12), ar(14), 
+                ar(16), ar(18), ar(20), ar(22), 
+                ar(24), ar(26), ar(28), ar(30))
   }
 }
 
