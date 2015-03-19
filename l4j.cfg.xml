@@ -20,7 +20,7 @@
     <maxVersion></maxVersion>
     <jdkPreference>preferJre</jdkPreference>
     <runtimeBits>64/32</runtimeBits>
-    <initialHeapSize>512</initialHeapSize>
+    <initialHeapSize>256</initialHeapSize>
     <maxHeapSize>1024</maxHeapSize>
     <opt>-XX:+ShowMessageBoxOnError</opt>
     <opt>-XX:+HeapDumpOnOutOfMemoryError</opt>
