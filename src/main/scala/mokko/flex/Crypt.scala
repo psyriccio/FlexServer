@@ -8,6 +8,14 @@ package mokko.flex
 
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
+import java.security.MessageDigest
+ 
+object Sha256 {
+  private val sha = MessageDigest.getInstance("SHA-256")
+  def digest(s: String): String = {
+    new String(sha.digest(s.getBytes), "UTF-8")
+  }
+}
 
 class Crypt(algorithmName: String) {
   
