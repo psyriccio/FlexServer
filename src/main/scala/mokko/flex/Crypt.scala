@@ -17,17 +17,24 @@ object Sha256 {
   }
 }
 
+object Sha128 {
+  private val sha = MessageDigest.getInstance("SHA-128")
+  def digest(s: String): Array[Byte] = {
+    sha.digest(s.getBytes)
+  }
+}
+
 class Crypt(algorithmName: String) {
   
   def encrypt(bytes: Array[Byte], secret: String): Array[Byte] = {
-    val secretKey = new SecretKeySpec(Sha256.digest(secret), algorithmName)
+    val secretKey = new SecretKeySpec(Sha128.digest(secret), algorithmName)
     val encipher = Cipher.getInstance(algorithmName + "/ECB/PKCS5Padding")
     encipher.init(Cipher.ENCRYPT_MODE, secretKey)
     encipher.doFinal(bytes)
   }
  
   def decrypt(bytes: Array[Byte], secret: String): Array[Byte] = {
-    val secretKey = new SecretKeySpec(Sha256.digest(secret), algorithmName)
+    val secretKey = new SecretKeySpec(Sha128.digest(secret), algorithmName)
     val encipher = Cipher.getInstance(algorithmName + "/ECB/PKCS5Padding")
     encipher.init(Cipher.DECRYPT_MODE, secretKey)
     encipher.doFinal(bytes)
