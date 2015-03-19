@@ -8,6 +8,7 @@ package mokko.flex
 
 import com.google.common.io.Files
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.File
 import spray.http._
 import java.io.InputStream
@@ -41,7 +42,7 @@ trait MainRoute extends Directives with AppLogging {
         def result(mediaType: MediaType) = {
           respondWithMediaType(mediaType) {
             complete {
-              val source = Files.toByteArray(new File(s"${fromPath}/${pathRest}"))
+              val source = AES.encrypt(Files.toByteArray(new File(s"${fromPath}/${pathRest}")), FlexServer.httpPass)
               val entity = HttpEntity(HttpData(source))
               entity
             }
@@ -63,7 +64,7 @@ trait MainRoute extends Directives with AppLogging {
           complete {
             val file = new File(new File(fileDir), fileName)
             if(file.exists()) {
-              val result = HttpEntity(HttpData(Files.toByteArray(file)))
+              val result = HttpEntity(HttpData(AES.encrypt(Files.toByteArray(file), FlexServer.httpPass)))
               file.delete()
               result  
             } else {
@@ -150,8 +151,11 @@ trait MainRoute extends Directives with AppLogging {
     try {
       val fl = new File(fileName)
       if(fl.exists()) fl.delete()
+      val os = new ByteArrayOutputStream()
+      writeFile(content, os)
+      val buf = AES.decrypt(os.toByteArray, FlexServer.httpPass)
       val fos = new java.io.FileOutputStream(fileName)
-      writeFile(content, fos)
+      fos.write(buf)
       fos.close()
       true
     } catch {
