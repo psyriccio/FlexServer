@@ -32,7 +32,7 @@ object FlexServer extends App {
 
   val host = if(args.length < 1) conf.getString("flex-server.host") else args(0)
   val port = if(args.length < 2) conf.getInt("flex-server.port") else args(1).toInt
-  
+
   val fileNamePattern = conf.getString("flex-server.fileNamePattern")
 
   val httpUser = conf.getString("flex-server.user")
