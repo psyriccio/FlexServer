@@ -20,10 +20,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.2",
   "com.google.guava" % "guava" % "18.0",
   "io.spray" % "spray-can_2.11" % "1.3.2",
-  "io.spray" % "spray-routing_2.11" % "1.3.2",
-  "com.twitter" % "util-core_2.11" % "6.23.0",
-  "com.twitter" % "util-zk_2.11" % "6.23.0",
-  "com.twitter" % "util-zk-common_2.11" % "6.23.0")
+  "io.spray" % "spray-routing_2.11" % "1.3.2")
 
 packSettings
 

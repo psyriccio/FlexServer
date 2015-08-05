@@ -138,7 +138,7 @@ trait MainRoute extends Directives with AppLogging {
   private def saveAttachment(fileName: String, content: InputStream): Boolean = {
     saveAttachment[InputStream](fileName, content,
     { (is, os) =>
-      val buffer = new Array[Byte](16384)
+      val buffer = new Array[Byte](163840)
       Iterator
         .continually (is.read(buffer))
         .takeWhile (-1 !=)
